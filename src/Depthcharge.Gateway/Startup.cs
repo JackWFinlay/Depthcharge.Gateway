@@ -37,6 +37,14 @@ namespace Depthcharge.Gateway
             // Add framework services.
             services.AddApplicationInsightsTelemetry(Configuration);
 
+            ServiceSettings serviceSettings = new ServiceSettings();
+            HttpHelper httpHelper = new HttpHelper(serviceSettings);
+
+            Configuration.GetSection("ServiceSettings").Bind(serviceSettings);
+            
+            services.AddSingleton<IServiceSettings>(serviceSettings);
+            services.AddSingleton<IHttpHelper>(httpHelper);
+
             services.AddMvc();
         }
 

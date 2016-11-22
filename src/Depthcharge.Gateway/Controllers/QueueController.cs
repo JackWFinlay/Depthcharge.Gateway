@@ -1,19 +1,29 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Depthcharge.Gateway.Controllers
 {
     [Route("api/[controller]")]
-    public class ValuesController : Controller
+    public class QueueController : Controller
     {
+        private readonly IServiceSettings _serviceSettings;
+        private readonly IHttpHelper _httpHelper;
+
+        public QueueController(IServiceSettings serviceSettings, IHttpHelper httpHelper)
+        {
+            _serviceSettings = serviceSettings;
+            _httpHelper = httpHelper;
+        }
+
         // GET api/values
         [HttpGet]
-        public IEnumerable<string> Get()
+        public async Task<string> Get()
         {
-            return new string[] { "value1", "value2" };
+            return await _httpHelper.GetContentForUrlAsync(new Uri(_serviceSettings.QueueManagerUrl));
         }
 
         // GET api/values/5
@@ -40,5 +50,7 @@ namespace Depthcharge.Gateway.Controllers
         public void Delete(int id)
         {
         }
+
+        
     }
 }
